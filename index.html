@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Цикл Трекер UA</title>
+  <link rel="manifest" href="data:application/manifest+json,{
+    'name': 'Цикл Трекер UA',
+    'short_name': 'ЦиклUA',
+    'icons': [{'src': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjRURENEM0Ii8+CjxwYXRoIGQ9Ik0xMjEgMTIxQzEyMSAxMjcgMTE1LjUgMTMyIDEwOSAxMzJDMTAzLjUgMTMyIDk4IDEyNyA5OCAxMjFDOTggMTE1LjUgMTAzLjUgMTEwIDEwOSAxMTBDMTE1LjUgMTEwIDEyMSAxMTUuNSAxMjEgMTIxWiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K', 'sizes': '192x192', 'type': 'image/svg+xml'}],
+    'start_url': '/',
+    'display': 'standalone',
+    'theme_color': '#6366f1',
+    'background_color': '#f5f7fa'
+  }">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Цикл Трекер UA">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjRURENEM0Ii8+CjxwYXRoIGQ9Ik0xMjEgMTIxQzEyMSAxMjcgMTE1LjUgMTMyIDEwOSAxMzJDMTAzLjUgMTMyIDk4IDEyNyA5OCAxMjFDOTggMTE1LjUgMTAzLjUgMTEwIDEwOSAxMTBDMTE1LjUgMTEwIDEyMSAxMTUuNSAxMjEgMTIxWiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+      margin: 0; padding: 20px; min-height: 100vh;
+      max-width: 400px; margin: auto;
+    }
+    .container { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    input, select, button { 
+      width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; 
+      border-radius: 12px; font-size: 16px; background: #f9fafb;
+    }
+    button { 
+      background: linear-gradient(135deg, #6366f1, #5856eb); color: white; 
+      border: none; font-weight: 600; cursor: pointer;
+    }
+    button:active { transform: scale(0.98); }
+    #calendar { 
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; 
+      margin: 25px 0; padding: 15px; background: #f8fafc; border-radius: 12px;
+    }
+    .day { 
+      padding: 12px; text-align: center; border-radius: 10px; 
+      background: white; font-weight: 500; font-size: 14px;
+    }
+    .period { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: white; }
+    .ovulation { background: linear-gradient(135deg, #10b981, #059669) !important; color: white; }
+    .today { border: 2px solid #6366f1; }
+    #chart-container { height: 220px; margin: 25px 0; border-radius: 12px; overflow: hidden; }
+    #prediction { 
+      background: linear-gradient(135deg, #10b981, #059669); 
+      color: white; padding: 25px; border-radius: 20px; margin: 25px 0;
+      text-align: center; font-weight: 600;
+    }
+    .symptom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
+    .symptom { padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; text-align: center; cursor: pointer; }
+    .symptom.active { background: #6366f1; color: white; }
+    @media (max-width: 480px) { body { padding: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align: center; margin: 0 0 20px; color: #1f2937;">🚺 Цикл Трекер UA</h1>
+    
+    <input type="date" id="lastPeriod" placeholder="Дата останніх місячних">
+    <input type="number" id="cycleLength" placeholder="Довжина циклу (28)" value="28" min="21" max="35">
+    <input type="number" id="periodLength" placeholder="Довжина місячних (5)" value="5" min="2" max="10">
+    
+    <div class="symptom-grid" id="symptoms">
+      <div class="symptom" onclick="toggleSymptom('Біль')">Біль</div>
+      <div class="symptom" onclick="toggleSymptom('Настрій')">Настрій</div>
+      <div class="symptom" onclick="toggleSymptom('Сон')">Сон</div>
+      <div class="symptom" onclick="toggleSymptom('Вага')">Вага</div>
+    </div>
+    
+    <button onclick="addPeriod()">✅ Додати цикл</button>
+    <button onclick="predict()">🔮 Прогноз</button>
+    <button onclick="exportData()">📤 Експорт</button>
+    
+    <div id="calendar"></div>
+    <div id="chart-container"><canvas id="chart"></canvas></div>
+    <div id="prediction" style="display: none;"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let cycles = JSON.parse(localStorage.getItem('cycles') || '[]');
+    let symptoms = JSON.parse(localStorage.getItem('symptoms') || '[]');
+    
+    function toggleSymptom(symptom) {
+      const idx = symptoms.indexOf(symptom);
+      if (idx > -1) symptoms.splice(idx, 1);
+      else symptoms.push(symptom);
+      localStorage.setItem('symptoms', JSON.stringify(symptoms));
+      renderCalendar();
+    }
+    
+    function addPeriod() {
+      const date = document.getElementById('lastPeriod').value;
+      const cycle = parseInt(document.getElementById('cycleLength').value);
+      const period = parseInt(document.getElementById('periodLength').value);
+      if (date) {
+        cycles.unshift({ date, cycle, period, symptoms: [...symptoms] });
+        localStorage.setItem('cycles', JSON.stringify(cycles.slice(0, 24)));
+        symptoms = [];
+        localStorage.setItem('symptoms', '[]');
+        renderCalendar();
+        drawChart();
+        predict();
+      }
+    }
+    
+    function predict() {
+      if (!cycles.length) return;
+      const last = new Date(cycles[0].date);
+      const avgCycle = cycles.slice(0,6).reduce((sum, c) => sum + c.cycle, 0) / cycles.slice(0,6).length;
+      const nextPeriod = new Date(last.getTime() + avgCycle * 86400000);
+      const ovulation = new Date(last.getTime() + (avgCycle - 14) * 86400000);
+      
+      const daysLeft = Math.ceil((nextPeriod - Date.now()) / 86400000);
+      document.getElementById('prediction').innerHTML = `
+        <h3>📅 Наступні місячні</h3>
+        <p style="font-size: 24px; margin: 10px 0;">${nextPeriod.toLocaleDateString('uk-UA')}</p>
+        <p>Овуляція: ${ovulation.toLocaleDateString('uk-UA')}</p>
+        <p>Залишилось днів: <strong>${daysLeft}</strong></p>
+      `;
+      document.getElementById('prediction').style.display = 'block';
+    }
+    
+    function renderCalendar() {
+      const cal = document.getElementById('calendar');
+      cal.innerHTML = '';
+      ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].forEach(day => {
+        const d = document.createElement('div');
+        d.className = 'day';
+        d.textContent = day;
+        d.style.fontSize = '12px';
+        cal.appendChild(d);
+      });
+      
+      const today = new Date(); today.setHours(0,0,0,0);
+      for (let i = -7; i <= 21; i++) {
+        const day = new Date(today.getTime() + i * 86400000);
+        const d = cal.appendChild(document.createElement('div'));
+        d.className = 'day';
+        d.textContent = day.getDate();
+        if (i === 0) d.classList.add('today');
+        
+        cycles.forEach(c => {
+          const start = new Date(c.date); start.setHours(0,0,0,0);
+          const end = new Date(start.getTime() + c.period * 86400000);
+          if (day >= start && day < end) d.classList.add('period');
+        });
+      }
+    }
+    
+    function drawChart() {
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (window.myChart) window.myChart.destroy();
+      window.myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: cycles.slice(0,12).map(c => new Date(c.date).toLocaleDateString('uk-UA')),
+          datasets: [{
+            label: 'Цикл (дні)',
+            data: cycles.slice(0,12).map(c => c.cycle),
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+    
+    function exportData() {
+      const data = cycles.map(c => 
+        `${c.date},${c.cycle},${c.period},"${c.symptoms.join(',')}"`
+      ).join('\n');
+      const blob = new Blob([data], {type: 'text/csv;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `cycle-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+    
+    // Ініціалізація
+    renderCalendar(); 
+    if (cycles.length) {
+      drawChart();
+      predict();
+    }
+    
+    // PWA install prompt для iPhone
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      deferredPrompt = e;
+    });
+  </script>
+</body>
+</html>
