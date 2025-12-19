@@ -3,201 +3,369 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Цикл Трекер UA</title>
-  <link rel="manifest" href="data:application/manifest+json,{
-    'name': 'Цикл Трекер UA',
-    'short_name': 'ЦиклUA',
-    'icons': [{'src': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjRURENEM0Ii8+CjxwYXRoIGQ9Ik0xMjEgMTIxQzEyMSAxMjcgMTE1LjUgMTMyIDEwOSAxMzJDMTAzLjUgMTMyIDk4IDEyNyA5OCAxMjFDOTggMTE1LjUgMTAzLjUgMTEwIDEwOSAxMTBDMTE1LjUgMTEwIDEyMSAxMTUuNSAxMjEgMTIxWiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K', 'sizes': '192x192', 'type': 'image/svg+xml'}],
-    'start_url': '/',
-    'display': 'standalone',
-    'theme_color': '#6366f1',
-    'background_color': '#f5f7fa'
-  }">
+  <title>Цикл Трекер для дружини</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Цикл Трекер UA">
+  <meta name="apple-mobile-web-app-title" content="Цикл">
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9Ijk2IiBmaWxsPSIjRURENEM0Ii8+CjxwYXRoIGQ9Ik0xMjEgMTIxQzEyMSAxMjcgMTE1LjUgMTMyIDEwOSAxMzJDMTAzLjUgMTMyIDk4IDEyNyA5OCAxMjFDOTggMTE1LjUgMTAzLjUgMTEwIDEwOSAxMTBDMTE1LjUgMTEwIDEyMSAxMTUuNSAxMjEgMTIxWiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4K">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-      margin: 0; padding: 20px; min-height: 100vh;
-      max-width: 400px; margin: auto;
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:16px;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(135deg,#f5f7fa,#e0e7ff);
+      max-width:420px;margin:auto;min-height:100vh;
     }
-    .container { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    input, select, button { 
-      width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; 
-      border-radius: 12px; font-size: 16px; background: #f9fafb;
+    .card{
+      background:#fff;border-radius:18px;
+      padding:18px 16px;margin-bottom:14px;
+      box-shadow:0 8px 18px rgba(15,23,42,0.08);
     }
-    button { 
-      background: linear-gradient(135deg, #6366f1, #5856eb); color: white; 
-      border: none; font-weight: 600; cursor: pointer;
+    h1{margin:0 0 8px;font-size:22px;color:#111827;text-align:center}
+    h2{margin:0 0 10px;font-size:17px;color:#111827}
+    .subtitle{text-align:center;color:#6b7280;font-size:13px;margin-bottom:10px}
+    input,button{
+      width:100%;padding:12px 14px;margin-top:8px;
+      border-radius:12px;border:1px solid #e5e7eb;font-size:15px;
     }
-    button:active { transform: scale(0.98); }
-    #calendar { 
-      display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; 
-      margin: 25px 0; padding: 15px; background: #f8fafc; border-radius: 12px;
+    button{
+      border:none;background:linear-gradient(135deg,#6366f1,#4f46e5);
+      color:#fff;font-weight:600;cursor:pointer;
     }
-    .day { 
-      padding: 12px; text-align: center; border-radius: 10px; 
-      background: white; font-weight: 500; font-size: 14px;
+    button:active{transform:scale(.98)}
+    .btn-secondary{background:#f3f4ff;color:#4338ca}
+    .grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+    .day-header{font-size:11px;color:#9ca3af;text-align:center}
+    .day{
+      background:#f9fafb;border-radius:10px;
+      text-align:center;padding:8px 4px;font-size:13px;
+      position:relative;
     }
-    .period { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: white; }
-    .ovulation { background: linear-gradient(135deg, #10b981, #059669) !important; color: white; }
-    .today { border: 2px solid #6366f1; }
-    #chart-container { height: 220px; margin: 25px 0; border-radius: 12px; overflow: hidden; }
-    #prediction { 
-      background: linear-gradient(135deg, #10b981, #059669); 
-      color: white; padding: 25px; border-radius: 20px; margin: 25px 0;
-      text-align: center; font-weight: 600;
+    .today{border:2px solid #6366f1}
+    .period{background:#fee2e2;color:#b91c1c}
+    .predicted{background:#e0f2fe;color:#0369a1}
+    .fertile{border:1px dashed #22c55e}
+    .dot{
+      width:6px;height:6px;border-radius:50%;
+      background:#6366f1;position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
     }
-    .symptom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
-    .symptom { padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; text-align: center; cursor: pointer; }
-    .symptom.active { background: #6366f1; color: white; }
-    @media (max-width: 480px) { body { padding: 10px; } }
+    .symptom-chip{
+      padding:7px 10px;border-radius:999px;
+      border:1px solid #e5e7eb;font-size:12px;
+      display:inline-block;margin:3px 4px;cursor:pointer;
+      background:#f9fafb;
+    }
+    .symptom-chip.active{
+      background:#4f46e5;color:#fff;border-color:#4338ca;
+    }
+    .tip{font-size:13px;color:#111827;margin-top:6px}
+    .tip small{color:#6b7280}
+    .pill{
+      display:inline-block;padding:4px 8px;border-radius:999px;
+      font-size:11px;background:#eef2ff;color:#4338ca;margin-right:4px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 style="text-align: center; margin: 0 0 20px; color: #1f2937;">🚺 Цикл Трекер UA</h1>
-    
-    <input type="date" id="lastPeriod" placeholder="Дата останніх місячних">
-    <input type="number" id="cycleLength" placeholder="Довжина циклу (28)" value="28" min="21" max="35">
-    <input type="number" id="periodLength" placeholder="Довжина місячних (5)" value="5" min="2" max="10">
-    
-    <div class="symptom-grid" id="symptoms">
-      <div class="symptom" onclick="toggleSymptom('Біль')">Біль</div>
-      <div class="symptom" onclick="toggleSymptom('Настрій')">Настрій</div>
-      <div class="symptom" onclick="toggleSymptom('Сон')">Сон</div>
-      <div class="symptom" onclick="toggleSymptom('Вага')">Вага</div>
-    </div>
-    
-    <button onclick="addPeriod()">✅ Додати цикл</button>
-    <button onclick="predict()">🔮 Прогноз</button>
-    <button onclick="exportData()">📤 Експорт</button>
-    
-    <div id="calendar"></div>
-    <div id="chart-container"><canvas id="chart"></canvas></div>
-    <div id="prediction" style="display: none;"></div>
+  <div class="card">
+    <h1>Цикл дружини</h1>
+    <div class="subtitle">Просто відмічає дні — решту рахує сам</div>
+
+    <label style="font-size:13px;color:#6b7280">Дата початку останніх місячних</label>
+    <input type="date" id="lastPeriod">
+    <label style="font-size:13px;color:#6b7280">Середня довжина циклу (днів)</label>
+    <input type="number" id="cycleLength" value="28" min="21" max="40">
+    <label style="font-size:13px;color:#6b7280">Довжина місячних (днів)</label>
+    <input type="number" id="periodLength" value="5" min="2" max="10">
+
+    <button id="btnToday">Сьогодні почались</button>
+    <button class="btn-secondary" id="btnSaveBase">Зберегти базові налаштування</button>
+
+    <div id="status" class="tip"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    let cycles = JSON.parse(localStorage.getItem('cycles') || '[]');
-    let symptoms = JSON.parse(localStorage.getItem('symptoms') || '[]');
-    
-    function toggleSymptom(symptom) {
-      const idx = symptoms.indexOf(symptom);
-      if (idx > -1) symptoms.splice(idx, 1);
-      else symptoms.push(symptom);
-      localStorage.setItem('symptoms', JSON.stringify(symptoms));
-      renderCalendar();
+  <div class="card">
+    <h2>Сьогодні</h2>
+    <div id="todayInfo" class="tip"></div>
+    <div id="todayTip" class="tip"></div>
+  </div>
+
+  <div class="card">
+    <h2>Симптоми сьогодні</h2>
+    <div id="symptomChips"></div>
+    <div class="tip"><small>Натисни, щоб відмітити. Зберігаються по днях циклу.</small></div>
+  </div>
+
+  <div class="card">
+    <h2>Календар</h2>
+    <div class="tip">
+      <span class="pill" style="background:#fee2e2;color:#b91c1c">Місячні</span>
+      <span class="pill" style="background:#e0f2fe;color:#0369a1">Очікуються</span>
+      <span class="pill" style="border:1px dashed #22c55e;background:#ecfdf5;color:#166534">Фертильні</span>
+      <span class="pill" style="background:#eef2ff;color:#4338ca">● симптоми</span>
+    </div>
+    <div class="grid-7" id="calendar"></div>
+  </div>
+
+  <div class="card">
+    <h2>Прогноз</h2>
+    <div id="forecast" class="tip"></div>
+  </div>
+
+<script>
+  const LS_CYCLES = 'cycles_v2';
+  const LS_SYMPTOMS = 'symptoms_v2';
+  const LS_BASE = 'base_settings_v1';
+
+  let cycles = JSON.parse(localStorage.getItem(LS_CYCLES) || '[]'); // [{start: 'YYYY-MM-DD', length, period}]
+  let daySymptoms = JSON.parse(localStorage.getItem(LS_SYMPTOMS) || '{}'); // { 'YYYY-MM-DD': ['Біль',...] }
+
+  const symptomList = ['Біль','Настрій','Сон','Вага','Головний біль','Набряки'];
+
+  function saveCycles() {
+    localStorage.setItem(LS_CYCLES, JSON.stringify(cycles.slice(0,24)));
+  }
+  function saveSymptoms() {
+    localStorage.setItem(LS_SYMPTOMS, JSON.stringify(daySymptoms));
+  }
+
+  function loadBaseSettings() {
+    const base = JSON.parse(localStorage.getItem(LS_BASE) || 'null');
+    if (base) {
+      document.getElementById('cycleLength').value = base.cycle || 28;
+      document.getElementById('periodLength').value = base.period || 5;
     }
-    
-    function addPeriod() {
-      const date = document.getElementById('lastPeriod').value;
-      const cycle = parseInt(document.getElementById('cycleLength').value);
-      const period = parseInt(document.getElementById('periodLength').value);
-      if (date) {
-        cycles.unshift({ date, cycle, period, symptoms: [...symptoms] });
-        localStorage.setItem('cycles', JSON.stringify(cycles.slice(0, 24)));
-        symptoms = [];
-        localStorage.setItem('symptoms', '[]');
-        renderCalendar();
-        drawChart();
-        predict();
-      }
-    }
-    
-    function predict() {
-      if (!cycles.length) return;
-      const last = new Date(cycles[0].date);
-      const avgCycle = cycles.slice(0,6).reduce((sum, c) => sum + c.cycle, 0) / cycles.slice(0,6).length;
-      const nextPeriod = new Date(last.getTime() + avgCycle * 86400000);
-      const ovulation = new Date(last.getTime() + (avgCycle - 14) * 86400000);
-      
-      const daysLeft = Math.ceil((nextPeriod - Date.now()) / 86400000);
-      document.getElementById('prediction').innerHTML = `
-        <h3>📅 Наступні місячні</h3>
-        <p style="font-size: 24px; margin: 10px 0;">${nextPeriod.toLocaleDateString('uk-UA')}</p>
-        <p>Овуляція: ${ovulation.toLocaleDateString('uk-UA')}</p>
-        <p>Залишилось днів: <strong>${daysLeft}</strong></p>
-      `;
-      document.getElementById('prediction').style.display = 'block';
-    }
-    
-    function renderCalendar() {
-      const cal = document.getElementById('calendar');
-      cal.innerHTML = '';
-      ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].forEach(day => {
-        const d = document.createElement('div');
-        d.className = 'day';
-        d.textContent = day;
-        d.style.fontSize = '12px';
-        cal.appendChild(d);
-      });
-      
-      const today = new Date(); today.setHours(0,0,0,0);
-      for (let i = -7; i <= 21; i++) {
-        const day = new Date(today.getTime() + i * 86400000);
-        const d = cal.appendChild(document.createElement('div'));
-        d.className = 'day';
-        d.textContent = day.getDate();
-        if (i === 0) d.classList.add('today');
-        
-        cycles.forEach(c => {
-          const start = new Date(c.date); start.setHours(0,0,0,0);
-          const end = new Date(start.getTime() + c.period * 86400000);
-          if (day >= start && day < end) d.classList.add('period');
-        });
-      }
-    }
-    
-    function drawChart() {
-      const ctx = document.getElementById('chart').getContext('2d');
-      if (window.myChart) window.myChart.destroy();
-      window.myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: cycles.slice(0,12).map(c => new Date(c.date).toLocaleDateString('uk-UA')),
-          datasets: [{
-            label: 'Цикл (дні)',
-            data: cycles.slice(0,12).map(c => c.cycle),
-            borderColor: '#6366f1',
-            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-            tension: 0.4,
-            fill: true
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-    }
-    
-    function exportData() {
-      const data = cycles.map(c => 
-        `${c.date},${c.cycle},${c.period},"${c.symptoms.join(',')}"`
-      ).join('\n');
-      const blob = new Blob([data], {type: 'text/csv;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `cycle-${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-    }
-    
-    // Ініціалізація
-    renderCalendar(); 
-    if (cycles.length) {
-      drawChart();
-      predict();
-    }
-    
-    // PWA install prompt для iPhone
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      deferredPrompt = e;
+  }
+  function saveBaseSettings() {
+    const cycle = parseInt(document.getElementById('cycleLength').value) || 28;
+    const period = parseInt(document.getElementById('periodLength').value) || 5;
+    localStorage.setItem(LS_BASE, JSON.stringify({cycle, period}));
+    document.getElementById('status').innerText = 'Базові налаштування збережені.';
+  }
+
+  document.getElementById('btnSaveBase').onclick = saveBaseSettings;
+
+  function addCycle(dateStr) {
+    const cycle = parseInt(document.getElementById('cycleLength').value) || 28;
+    const period = parseInt(document.getElementById('periodLength').value) || 5;
+    cycles.unshift({start: dateStr, length: cycle, period});
+    saveCycles();
+    document.getElementById('lastPeriod').value = dateStr;
+    refreshAll();
+  }
+
+  document.getElementById('btnToday').onclick = () => {
+    const todayStr = new Date().toISOString().slice(0,10);
+    addCycle(todayStr);
+  };
+
+  document.getElementById('lastPeriod').addEventListener('change', e => {
+    if (e.target.value) addCycle(e.target.value);
+  });
+
+  function getDayDiff(a,b) {
+    const d1 = new Date(a); d1.setHours(0,0,0,0);
+    const d2 = new Date(b); d2.setHours(0,0,0,0);
+    return Math.round((d2-d1)/86400000);
+  }
+
+  function calcForecast() {
+    if (cycles.length === 0) return null;
+    const last = cycles[0];
+    const lengths = cycles.slice(0,8).map(c=>c.length);
+    const avg = lengths.reduce((s,x)=>s+x,0)/lengths.length;
+    const min = Math.min(...lengths);
+    const max = Math.max(...lengths);
+
+    const lastDate = new Date(last.start);
+    const nextMin = new Date(lastDate.getTime() + min*86400000);
+    const nextMax = new Date(lastDate.getTime() + max*86400000);
+    const ovulation = new Date(lastDate.getTime() + (avg-14)*86400000);
+
+    return {avg,min,max,nextMin,nextMax,ovulation};
+  }
+
+  function forecastText() {
+    const f = calcForecast();
+    if (!f) return 'Ще немає достатньо даних. Відміть хоча б один цикл.';
+    const today = new Date(); today.setHours(0,0,0,0);
+    const daysToMin = getDayDiff(today,f.nextMin);
+    const daysToMax = getDayDiff(today,f.nextMax);
+
+    let rangeText = `${f.nextMin.toLocaleDateString('uk-UA')} – ${f.nextMax.toLocaleDateString('uk-UA')}`;
+    let toText = daysToMin===daysToMax
+      ? `через ${daysToMin} днів`
+      : `приблизно через ${daysToMin}–${daysToMax} днів`;
+
+    return `
+      Наступні місячні очікуються: <strong>${rangeText}</strong> (${toText}).<br>
+      Середня довжина циклу: <strong>${Math.round(f.avg)} днів</strong> (коливання ${f.min}–${f.max}).<br>
+      Овуляція орієнтовно: <strong>${f.ovulation.toLocaleDateString('uk-UA')}</strong>.
+    `;
+  }
+
+  function buildCalendar() {
+    const cont = document.getElementById('calendar');
+    cont.innerHTML = '';
+    const weekDays = ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+    weekDays.forEach(d=>{
+      const h=document.createElement('div');
+      h.className='day-header';
+      h.textContent=d;
+      cont.appendChild(h);
     });
-  </script>
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(today.getFullYear(),today.getMonth(),1);
+    const offset = (start.getDay()+6)%7; // 0=Пн
+    for(let i=0;i<offset;i++){
+      const empty=document.createElement('div');
+      cont.appendChild(empty);
+    }
+
+    const daysInMonth = new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
+
+    const f = calcForecast();
+    for(let d=1; d<=daysInMonth; d++){
+      const date = new Date(today.getFullYear(),today.getMonth(),d);
+      date.setHours(0,0,0,0);
+      const dateStr = date.toISOString().slice(0,10);
+      const cell = document.createElement('div');
+      cell.className='day';
+      cell.textContent=d;
+
+      if (date.getTime()===today.getTime()) cell.classList.add('today');
+
+      // Місячні (факт)
+      cycles.forEach(c=>{
+        const start = new Date(c.start); start.setHours(0,0,0,0);
+        const end = new Date(start.getTime()+c.period*86400000);
+        if(date>=start && date<end) cell.classList.add('period');
+      });
+
+      // Прогнозовані + фертильні
+      if (f){
+        const last = cycles[0];
+        const lastStart = new Date(last.start); lastStart.setHours(0,0,0,0);
+
+        const dayFromLast = getDayDiff(lastStart,date);
+        if (dayFromLast>=f.min && dayFromLast<=f.max){
+          cell.classList.add('predicted');
+        }
+        const fertileStart = Math.round(f.avg-14-3);
+        const fertileEnd = Math.round(f.avg-14+3);
+        if (dayFromLast>=fertileStart && dayFromLast<=fertileEnd){
+          cell.classList.add('fertile');
+        }
+      }
+
+      // Симптоми
+      if (daySymptoms[dateStr] && daySymptoms[dateStr].length){
+        const dot=document.createElement('div');
+        dot.className='dot';
+        cell.appendChild(dot);
+        cell.title = daySymptoms[dateStr].join(', ');
+      }
+
+      cont.appendChild(cell);
+    }
+  }
+
+  function buildSymptomChips() {
+    const wrap = document.getElementById('symptomChips');
+    wrap.innerHTML='';
+    const todayStr = new Date().toISOString().slice(0,10);
+    const todayList = daySymptoms[todayStr] || [];
+
+    symptomList.forEach(name=>{
+      const chip=document.createElement('div');
+      chip.className='symptom-chip'+(todayList.includes(name)?' active':'');
+      chip.textContent=name;
+      chip.onclick=()=>{
+        const list = daySymptoms[todayStr] || [];
+        const i=list.indexOf(name);
+        if(i>-1) list.splice(i,1); else list.push(name);
+        daySymptoms[todayStr]=list;
+        if(list.length===0) delete daySymptoms[todayStr];
+        saveSymptoms();
+        buildSymptomChips();
+        updateTodayTip();
+      };
+      wrap.appendChild(chip);
+    });
+  }
+
+  function updateTodayInfo() {
+    const el = document.getElementById('todayInfo');
+    if (cycles.length===0){
+      el.innerHTML='Поки що немає жодного циклу. Натисни “Сьогодні почались” або вибери дату останніх.';
+      return;
+    }
+    const last = cycles[0];
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(last.start); start.setHours(0,0,0,0);
+    const dayInCycle = getDayDiff(start,today)+1;
+    const cycleLen = last.length;
+
+    if (dayInCycle<=0){
+      el.innerHTML='Ми ще до початку збереженого циклу. Перевір дату останніх місячних.';
+      return;
+    }
+    el.innerHTML = `Сьогодні <strong>${dayInCycle}</strong>-й день циклу із ~<strong>${cycleLen}</strong> днів.`;
+  }
+
+  function updateTodayTip() {
+    const tipEl = document.getElementById('todayTip');
+    if (cycles.length===0){
+      tipEl.innerHTML='';
+      return;
+    }
+    const last = cycles[0];
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(last.start); start.setHours(0,0,0,0);
+    const dayInCycle = getDayDiff(start,today)+1;
+    const cycleLen = last.length;
+
+    const todayStr = today.toISOString().slice(0,10);
+    const syms = daySymptoms[todayStr] || [];
+
+    let text = '';
+
+    if (dayInCycle>=1 && dayInCycle<=last.period){
+      text = 'Перші дні циклу. Нормально відчувати втому або біль. Більше відпочинку, тепла і води.';
+    } else if (dayInCycle < cycleLen-7){
+      text = 'Середина циклу. Хороший час для активностей та спорту — енергії зазвичай більше.';
+    } else if (dayInCycle >= cycleLen-7 && dayInCycle <= cycleLen){
+      text = 'Передменструальна фаза. Можливі зміни настрою, набряки або тяга до солодкого — це типово.';
+    } else {
+      text = 'Цикл трохи вийшов за звичні рамки. Якщо це повторюється, краще порадитись із лікарем.';
+    }
+
+    if (syms.includes('Біль')){
+      text += ' Ти відмітила біль — можна прийняти узгоджений з лікарем засіб і дати собі спокій.';
+    }
+    if (syms.includes('Настрій')){
+      text += ' Настрій скаче — це часто пов’язано з гормональними змінами, не вини себе.';
+    }
+    if (syms.includes('Сон')){
+      text += ' Проблеми зі сном — допоможе легка прогулянка ввечері й мінімум екранів перед сном.';
+    }
+
+    tipEl.innerHTML = text;
+  }
+
+  function refreshAll() {
+    loadBaseSettings();
+    document.getElementById('forecast').innerHTML = forecastText();
+    buildCalendar();
+    buildSymptomChips();
+    updateTodayInfo();
+    updateTodayTip();
+  }
+
+  // ініціалізація
+  loadBaseSettings();
+  refreshAll();
+</script>
 </body>
 </html>
