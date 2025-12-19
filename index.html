@@ -54,16 +54,21 @@
     .today{border:2px solid #6366f1}
     .period{background:#fee2e2;color:#b91c1c}
     .predicted{background:#e0f2fe;color:#0369a1}
-    .fertile{border:1px dashed #22c55e}
+    .fertile{
+      border:1px dashed #22c55e;
+    }
+
     .dot{
-      .cycle-day-label {
-  font-size: 10px;
-  color: #6b7280;
-  margin-top: 2px;
-}
       width:6px;height:6px;border-radius:50%;
       background:#6366f1;position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
     }
+
+    .cycle-day-label {
+      font-size: 10px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
     .symptom-chip{
       padding:7px 10px;border-radius:999px;
       border:1px solid #e5e7eb;font-size:12px;
@@ -259,59 +264,7 @@
     `;
   }
 
-  function buildCalendar(){
-    const cont=document.getElementById('calendar');
-    cont.innerHTML='';
-    const weekDays=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
-    weekDays.forEach(d=>{
-      const h=document.createElement('div');
-      h.className='day-header';
-      h.textContent=d;
-      cont.appendChild(h);
-    });
 
-    const today=new Date();today.setHours(0,0,0,0);
-    const startMonth=new Date(today.getFullYear(),today.getMonth(),1);
-    const offset=(startMonth.getDay()+6)%7;
-    for(let i=0;i<offset;i++){cont.appendChild(document.createElement('div'));}
-
-    const daysInMonth=new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
-    const f=calcForecast();
-
-    for(let d=1;d<=daysInMonth;d++){
-      const date=new Date(today.getFullYear(),today.getMonth(),d);
-      date.setHours(0,0,0,0);
-      const dateStr=date.toISOString().slice(0,10);
-      const cell=document.createElement('div');
-      cell.className='day';
-      cell.textContent=d;
-      if(date.getTime()===today.getTime()) cell.classList.add('today');
-
-      cycles.forEach(c=>{
-        const s=new Date(c.start);s.setHours(0,0,0,0);
-        const e=new Date(s.getTime()+c.period*86400000);
-        if(date>=s && date<e) cell.classList.add('period');
-      });
-
-      if(f){
-        const last=cycles[0];
-        const s=new Date(last.start);s.setHours(0,0,0,0);
-        const diff=getDayDiff(s,date);
-        if(diff>=f.min && diff<=f.max) cell.classList.add('predicted');
-        const fertileStart=Math.round(f.avg-14-3);
-        const fertileEnd=Math.round(f.avg-14+3);
-        if(diff>=fertileStart && diff<=fertileEnd) cell.classList.add('fertile');
-      }
-
-      if(daySymptoms[dateStr] && daySymptoms[dateStr].length){
-        const dot=document.createElement('div');
-        dot.className='dot';
-        cell.appendChild(dot);
-        cell.title=daySymptoms[dateStr].join(', ');
-      }
-      cont.appendChild(cell);
-    }
-  }
 
   function buildSymptomChips(){
     const wrap=document.getElementById('symptomChips');
@@ -528,7 +481,9 @@
     cont.appendChild(cell);
   }
 }
-
+  function refreshAll(){
+    forecastText();
+    buildCalendar();
     buildSymptomChips();
     updateTodayInfo();
     updateTodayTip();
@@ -537,6 +492,7 @@
 
   loadBaseSettings();
   refreshAll();
+
 </script>
 </body>
 </html>
