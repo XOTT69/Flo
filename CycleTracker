@@ -1,0 +1,7 @@
+cd Flo  # або де клонував
+git clone https://github.com/mdn/pwa-examples.git temp-pwa
+cp -r temp-pwa/cycletracker/app/* ./
+rm -rf temp-pwa
+git add .
+git commit -m "Add Flo PWA tracker from MDN"
+git push
